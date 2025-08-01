@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bryson's Profile</title>
+    <style>
+        :root {
+            --cyber-orange: #FF5F00;
+            --cyber-dark: #121212;
+            --cyber-light: #1E1E1E;
+            --cyber-text: #E0E0E0;
+            --cyber-accent: #FF9E00;
+            --primary-gradient: linear-gradient(135deg, #FF5F00 0%, #FF9E00 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background-color: var(--cyber-dark);
+            color: var(--cyber-text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        /* Main background matrix effect */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.1;
+            overflow: hidden;
+        }
+
+        .matrix-column {
+            position: absolute;
+            top: 0;
+            width: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #0A0;
+            text-shadow: 0 0 3px #0A0;
+            font-size: 16px;
+            animation: fall linear infinite;
+        }
+
+        /* Profile-specific matrix background */
+        .profile-container {
+            position: relative;
+        }
+
+        .profile-matrix {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .profile-column {
+            position: absolute;
+            top: 0;
+            width: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #0F0;
+            text-shadow: 0 0 8px #0F0;
+            font-size: 18px;
+            font-weight: bold;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        /* Modern Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--cyber-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            gap: 2rem;
+        }
+
+        .loading-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: var(--primary-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: float 3s ease-in-out infinite;
+            box-shadow: 0 10px 30px rgba(255, 95, 0, 0.3);
+        }
+
+        .loading-logo-inner {
+            width: 60%;
+            height: 60%;
+            background-color: white;
+            border-radius: 12px;
+        }
+
+        .loading-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            text-align: center;
+            max-width: 300px;
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .loading-subtext {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: var(--primary-gradient);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                            transparent, 
+                            rgba(255, 255, 255, 0.4), 
+                            transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 0.5rem;
+            animation: fadeIn 1.4s ease-out;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .loading-percentage {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'Courier New', monospace;
+            animation: fadeIn 1.6s ease-out;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* Main Content */
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background-color: rgba(30, 30, 30, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(255, 95, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--cyber-orange);
+            margin: 20px 0;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+            backdrop-filter: blur(5px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--cyber-orange);
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        .menu-btn:hover, .menu-btn:focus {
+            transform: scale(1.2);
+            background-color: rgba(255, 95, 0, 0.1);
+            outline: none;
+        }
+
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-matrix {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+            z-index: 1;
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--cyber-orange);
+            box-shadow: 0 0 20px rgba(255, 95, 0, 0.5);
+            animation: rotate 20s linear infinite;
+            transition: transform 0.3s;
+        }
+
+        .avatar:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .name {
+            font-size: 2.2rem;
+            color: var(--cyber-orange);
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 95, 0, 0.5);
+            letter-spacing: 1px;
+            font-weight: 600;
+            z-index: 1;
+            position: relative;
+        }
+
+        .about {
+            margin-top: 20px;
+            text-align: center;
+            max-width: 90%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .about h2 {
+            color: var(--cyber-accent);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .typing-text {
+            min-height: 80px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            border-left: 3px solid var(--cyber-orange);
+            padding-left: 15px;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        /* Messenger Icon */
+        .messenger-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--cyber-orange);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s infinite;
+            display: none;
+        }
+
+        .messenger-icon:hover, .messenger-icon:focus {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 6px 15px rgba(255, 95, 0, 0.6);
+            outline: none;
+        }
+
+        .messenger-icon img {
+            width: 60%;
+            height: 60%;
+            object-fit: contain;
+        }
+
+        /* Menu */
+        .menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: rgba(30, 30, 30, 0.95);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            transition: right 0.3s ease;
+            padding: 20px;
+            border-left: 2px solid var(--cyber-orange);
+            display: none;
+            backdrop-filter: blur(5px);
+        }
+
+        .menu.active {
+            right: 0;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--cyber-orange);
+        }
+
+        .menu-title {
+            color: var(--cyber-orange);
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--cyber-orange);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        .close-btn:hover {
+            background-color: rgba(255, 95, 0, 0.1);
+        }
+
+        .menu-items {
+            list-style: none;
+        }
+
+        .menu-items li {
+            margin-bottom: 15px;
+        }
+
+        .menu-items a {
+            color: var(--cyber-text);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            display: block;
+            padding: 12px;
+            border-radius: 5px;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-items a:hover, .menu-items a:focus {
+            color: var(--cyber-orange);
+            background-color: rgba(255, 95, 0, 0.1);
+            border-left: 3px solid var(--cyber-orange);
+            padding-left: 15px;
+            outline: none;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .name {
+                font-size: 2rem;
+            }
+
+            .typing-text {
+                font-size: 1rem;
+            }
+
+            .menu {
+                width: 85%;
+            }
+
+            .messenger-icon {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .loading-logo {
+                width: 60px;
+                height: 60px;
+                border-radius: 15px;
+            }
+            
+            .loading-text {
+                font-size: 1.2rem;
+            }
+            
+            .loading-content {
+                max-width: 250px;
+            }
+        }
+
+        .dot:nth-child(1) { animation: pulse 1.5s infinite; }
+        .dot:nth-child(2) { animation: pulse 1.5s infinite 0.2s; }
+        .dot:nth-child(3) { animation: pulse 1.5s infinite 0.4s; }
+    </style>
+</head>
+<body>
+    <!-- Main Background Matrix -->
+    <div class="matrix-bg" id="matrix-bg"></div>
+
+    <div class="loading-screen">
+        <div class="loading-logo">
+            <div class="loading-logo-inner"></div>
+        </div>
+        
+        <div class="loading-content">
+            <h1 class="loading-text">System Initializing</h1>
+            <p class="loading-subtext">Preparing your experience</p>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="loading-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            
+            <div class="loading-percentage" id="loading-percentage">0%</div>
+        </div>
+    </div>
+
+    <div class="container" id="main-content">
+        <div class="header">
+            <button class="menu-btn" aria-label="Open menu">☰</button>
+        </div>
+
+        <div class="profile-container">
+            <!-- Profile-specific matrix background -->
+            <div class="profile-matrix" id="profile-matrix"></div>
+            
+            <div class="avatar-container">
+                <img src="" alt="Profile picture" class="avatar" id="profile-avatar">
+            </div>
+            <h1 class="name" id="profile-name">LOADING...</h1>
+            <div class="about">
+                <h2>About me:</h2>
+                <div class="typing-text" id="typing-text" aria-live="polite"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="messenger-icon" id="messenger-btn" aria-label="Chat on Messenger">
+        <img src="https://i.imgur.com/GMeeEpI.png" alt="">
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="menu" id="menu">
+        <div class="menu-header">
+            <h2 class="menu-title">Menu</h2>
+            <button class="close-btn" id="close-btn" aria-label="Close menu">×</button>
+        </div>
+        <ul class="menu-items">
+            <li><a href="https://spam-share-by-bry.onrender.com/" target="_blank">Spam Share</a></li>
+            <li><a href="https://ai-conversational.onrender.com" target="_blank">AI Website</a></li>
+            <li><a href="https://tempmail-n2go.onrender.com" target="_blank">TempMail Gen</a></li>
+            <li><a href="https://sms-bomb-3ud2.onrender.com" target="_blank">SMS Bomb</a></li>
+            <li><a href="https://sangga-sa-profile-mgse.vercel.app/" target="_blank">FB Guard On</a></li>
+        </ul>
+    </div>
+
+    <script>
+        // Profile data
+        const profileImages = [
+            "https://i.imgur.com/Z8wXRVS.jpeg",
+            "https://i.imgur.com/BQ0vw7a.jpeg",
+            "https://i.imgur.com/6NNvK0n.jpeg",
+            "https://i.imgur.com/FisivKS.jpeg",
+            "https://i.imgur.com/ugCt6RW.jpeg"
+        ];
+
+        const profileNames = [
+            "BRYSON",
+            "CYBER-BRY",
+            "BRY-9000",
+            "BRYSON-V2",
+            "BRY-ALPHA"
+        ];
+
+        // Audio files - REPLACE THESE WITH YOUR ACTUAL AUDIO FILES
+        const audioFiles = [
+            "SpotiDownloader.com - Laklak - Teeth.mp3",
+            "SpotiDownloader.com - Banal Na Aso, Santong Kabayo - Yano.mp3"
+        ];
+
+        // Create main background matrix
+        function createMainMatrix() {
+            const matrixBg = document.getElementById('matrix-bg');
+            const symbols = "01{}[]<>()/*-+=!@#$%^&*";
+            const columns = Math.floor(window.innerWidth / 20);
+            
+            for (let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.className = 'matrix-column';
+                column.style.left = `${i * 20}px`;
+                column.style.animationDuration = `${8 + Math.random() * 10}s`;
+                column.style.animationDelay = `${Math.random() * 5}s`;
+                
+                const symbolCount = 5 + Math.floor(Math.random() * 6);
+                for (let j = 0; j < symbolCount; j++) {
+                    const symbol = document.createElement('div');
+                    symbol.textContent = symbols.charAt(Math.floor(Math.random() * symbols.length));
+                    symbol.style.opacity = 0.1 + Math.random() * 0.3;
+                    column.appendChild(symbol);
+                }
+                matrixBg.appendChild(column);
+            }
+        }
+
+        // Create profile-specific matrix
+        function createProfileMatrix() {
+            const profileMatrix = document.getElementById('profile-matrix');
+            const symbols = "01{}[]<>()/*-+=!@#$%^&*WARNINGERRORCRITICALFAILURE{}[]<>()/*-+=!@#$%^&*";
+            
+            // Calculate profile width
+            const profileWidth = document.querySelector('.profile-container').offsetWidth;
+            const columnCount = Math.floor(profileWidth / 18);
+            
+            for (let i = 0; i < columnCount; i++) {
+                const column = document.createElement('div');
+                column.className = 'profile-column';
+                column.style.left = `${i * 18}px`;
+                column.style.animationDuration = `${3 + Math.random() * 4}s`;
+                column.style.animationDelay = `${Math.random() * 2}s`;
+                
+                const symbolCount = 8 + Math.floor(Math.random() * 8);
+                for (let j = 0; j < symbolCount; j++) {
+                    const symbol = document.createElement('div');
+                    symbol.textContent = symbols.charAt(Math.floor(Math.random() * symbols.length));
+                    symbol.style.opacity = 0.2 + Math.random() * 0.8;
+                    column.appendChild(symbol);
+                }
+                profileMatrix.appendChild(column);
+            }
+        }
+
+        // Audio player functionality
+        function initAudioPlayer() {
+            // Create hidden audio element
+            const audio = document.createElement('audio');
+            audio.style.display = 'none';
+            document.body.appendChild(audio);
+            
+            // Select random audio file
+            const randomAudioIndex = Math.floor(Math.random() * audioFiles.length);
+            audio.src = audioFiles[randomAudioIndex];
+            
+            // Try to autoplay (may be blocked by browser)
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Autoplay prevented:", error);
+                    // Fallback: play after user interaction
+                    document.body.addEventListener('click', function() {
+                        audio.play().catch(e => console.log("Still prevented"));
+                    }, { once: true });
+                });
+            }
+            
+            // Loop the audio when it ends
+            audio.addEventListener('ended', function() {
+                audio.currentTime = 0;
+                audio.play();
+            });
+        }
+
+        // Loading simulation
+        function simulateLoading() {
+            const progressBar = document.getElementById('progress-bar');
+            const percentage = document.getElementById('loading-percentage');
+            let progress = 0;
+            
+            const interval = setInterval(() => {
+                progress += 1;
+                progressBar.style.width = `${progress}%`;
+                percentage.textContent = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(showContent, 300);
+                }
+            }, 70);
+        }
+
+        function showContent() {
+            const loadingScreen = document.querySelector('.loading-screen');
+            loadingScreen.style.opacity = '0';
+            loadingScreen.style.pointerEvents = 'none';
+            loadingScreen.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                document.getElementById('messenger-btn').style.display = 'flex';
+                document.getElementById('menu').style.display = 'block';
+                
+                // Load random profile
+                const randomProfile = getRandomProfile();
+                document.getElementById('profile-avatar').src = randomProfile.image;
+                document.getElementById('profile-name').textContent = randomProfile.name;
+                
+                // Initialize effects
+                createMainMatrix();
+                createProfileMatrix();
+                initAudioPlayer();
+                startTypingEffect();
+            }, 500);
+        }
+
+        function getRandomProfile() {
+            const randomIndex = Math.floor(Math.random() * profileImages.length);
+            return {
+                image: profileImages[randomIndex],
+                name: profileNames[randomIndex]
+            };
+        }
+
+        // Typing effect
+        function startTypingEffect() {
+            const textElement = document.getElementById('typing-text');
+            const texts = [
+                "Professional tambay",
+                "Pangarap yumaman ng walang ginagawa",
+                "Palamunin sa bahay"
+            ];
+            let textIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            let typingSpeed = 100;
+            let pauseBetweenTexts = 2000;
+
+            function type() {
+                const currentText = texts[textIndex];
+                
+                if (isDeleting) {
+                    textElement.textContent = currentText.substring(0, charIndex - 1);
+                    charIndex--;
+                    typingSpeed = 50;
+                } else {
+                    textElement.textContent = currentText.substring(0, charIndex + 1);
+                    charIndex++;
+                    typingSpeed = 100;
+                }
+
+                if (!isDeleting && charIndex === currentText.length) {
+                    isDeleting = true;
+                    typingSpeed = pauseBetweenTexts;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    textIndex = (textIndex + 1) % texts.length;
+                    typingSpeed = 500;
+                }
+
+                setTimeout(type, typingSpeed);
+            }
+
+            type();
+        }
+
+        // Menu functionality
+        const menuBtn = document.querySelector('.menu-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const menu = document.getElementById('menu');
+        const overlay = document.getElementById('overlay');
+
+        function toggleMenu() {
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+        closeBtn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+
+        // Messenger button
+        const messengerBtn = document.getElementById('messenger-btn');
+        
+        function openMessenger() {
+            window.open('https://m.me/61578130127315', '_blank', 'noopener,noreferrer');
+        }
+        
+        messengerBtn.addEventListener('click', openMessenger);
+        
+        messengerBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            openMessenger();
+        });
+
+        messengerBtn.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                openMessenger();
+            }
+        });
+
+        // Keyboard accessibility
+        document.addEventListener('keyup', function(e) {
+            if (e.key === 'Tab') {
+                document.querySelector(':focus').classList.add('keyboard-focus');
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            document.querySelectorAll('.keyboard-focus').forEach(el => {
+                el.classList.remove('keyboard-focus');
+            });
+        });
+
+        // Start loading when page loads
+        window.addEventListener('load', () => {
+            setTimeout(simulateLoading, 500);
+        });
+    </script>
+</body>
+</html>
